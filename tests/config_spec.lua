@@ -4,7 +4,7 @@ describe("config", function()
 
     config.set()
 
-    assert.equal(vim.fn.stdpath "state" .. "/session.log", config.options.log)
+    assert.equal(nil, config.options.log)
   end)
 
   it("has new values with custom config", function()
