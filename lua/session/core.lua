@@ -16,15 +16,33 @@ local function check(session)
   return find[1]
 end
 
+---@param action string
+---@param callback function
+local function hooks(action, callback)
+  local config = require "session.config"
+
+  if type(config.options.hooks.pre[action]) == "function" then
+    config.options.hooks.pre[action]()
+  end
+
+  callback()
+
+  if type(config.options.hooks.post[action]) == "function" then
+    config.options.hooks.post[action]()
+  end
+end
+
 function M.load(session)
   session = check(session)
   if session then
     M.update()
-    vim.cmd.bufdo {
-      args = { "bd" },
-      bang = true,
-    }
-    vim.cmd.source(session)
+    hooks("load", function()
+      vim.cmd.bufdo {
+        args = { "bd" },
+        bang = true,
+      }
+      vim.cmd.source(session)
+    end)
   end
 end
 
@@ -38,7 +56,9 @@ function M.delete(session)
   if session then
     vim.ui.select({ "Yes", "No" }, { prompt = ("Delete session %s"):format(session) }, function(choice)
       if choice == "Yes" then
-        os.remove(session)
+        hooks("delete", function()
+          os.remove(session)
+        end)
       end
     end)
   end
@@ -46,19 +66,18 @@ end
 
 function M.new()
   local session
-  vim.ui.input({ prompt = "Session name: "}, function(input)
+  vim.ui.input({ prompt = "Session name: " }, function(input)
     if input then
       session = input
     end
   end)
 
-  if check(session) == nil then
-    if M.hooks.pre then
-      M.hooks.pre()
-    end
-    vim.cmd.mksession {
-      args = { ("%s/%s"):format(require("session.config").options.dir, session) },
-    }
+  if session and check(session) == nil then
+    hooks("save", function()
+      vim.cmd.mksession {
+        args = { ("%s/%s"):format(require("session.config").options.dir, session) },
+      }
+    end)
   end
 end
 
@@ -70,14 +89,12 @@ function M.update(session)
   end
 
   if session then
-    local config = require "session.config"
-    if type(config.options.pre_save_hook) == "function" then
-      config.options.pre_save_hook()
-    end
-    vim.cmd.mksession {
-      args = { session },
-      bang = true,
-    }
+    hooks("save", function()
+      vim.cmd.mksession {
+        args = { session },
+        bang = true,
+      }
+    end)
   end
 end
 

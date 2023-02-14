@@ -3,8 +3,18 @@ local M = {}
 function M.defaults()
   ---@class SessionConfig
   local defaults = {
-    ---@type function?
-    pre_save_hook = nil,
+    hooks = {
+      pre = {
+        save = function() end,
+        delete = function() end,
+        load = function() end,
+      },
+      post = {
+        save = function() end,
+        delete = function() end,
+        load = function() end,
+      },
+    },
     dir = vim.fn.stdpath "data" .. "/session",
     -- log = vim.fn.stdpath "state" .. "/session.log",
     log = nil,
