@@ -4,7 +4,7 @@ end
 
 vim.g.loaded_Session = 1
 
-vim.api.nvim_create_autocmd("VimLeave", {
+vim.api.nvim_create_autocmd("VimLeavePre", {
   group = vim.api.nvim_create_augroup("SessionVimLeaveSaveSession", { clear = true }),
   callback = function()
     require("session.core").update();
