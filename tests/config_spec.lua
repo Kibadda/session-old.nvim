@@ -4,18 +4,18 @@ describe("config", function()
 
     config.set()
 
-    assert.equal(nil, config.options.log)
+    assert.equal(vim.fn.stdpath "data" .. "/session", config.options.dir)
   end)
 
   it("has new values with custom config", function()
     local config = require "session.config"
 
-    local log = "~/other/log/location/name.log"
+    local dir = "~/other/session/location"
 
     config.set {
-      log = log,
+      dir = dir,
     }
 
-    assert.equal(log, config.options.log)
+    assert.equal(dir, config.options.dir)
   end)
 end)

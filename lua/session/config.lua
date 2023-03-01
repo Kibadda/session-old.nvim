@@ -16,8 +16,6 @@ function M.defaults()
       },
     },
     dir = vim.fn.stdpath "data" .. "/session",
-    -- log = vim.fn.stdpath "state" .. "/session.log",
-    log = nil,
   }
   return defaults
 end

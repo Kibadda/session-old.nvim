@@ -38,7 +38,7 @@ function M.load(session)
     M.update()
     hooks("load", function()
       vim.cmd.bufdo {
-        args = { "bd" },
+        args = { "bwipeout" },
         bang = true,
       }
       vim.cmd.source(session)
