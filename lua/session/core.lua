@@ -1,9 +1,12 @@
 local M = {}
 
+---@return string?
 local function current()
   return #vim.v.this_session > 0 and vim.v.this_session or nil
 end
 
+---@param session? string
+---@return string?
 local function check(session)
   local find = vim.fs.find(session or "", {
     path = require("session.config").options.dir,
@@ -32,6 +35,7 @@ local function hooks(action, callback)
   end
 end
 
+---@param session? string
 function M.load(session)
   session = check(session)
   if session then
@@ -46,6 +50,7 @@ function M.load(session)
   end
 end
 
+---@param session? string
 function M.delete(session)
   if session then
     session = check(session)
@@ -81,6 +86,7 @@ function M.new()
   end
 end
 
+---@param session? string
 function M.update(session)
   if session then
     session = check(session)

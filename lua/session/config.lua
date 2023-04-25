@@ -15,6 +15,7 @@ function M.defaults()
         load = function() end,
       },
     },
+    ---@type string
     dir = vim.fn.stdpath "data" .. "/session",
   }
   return defaults
